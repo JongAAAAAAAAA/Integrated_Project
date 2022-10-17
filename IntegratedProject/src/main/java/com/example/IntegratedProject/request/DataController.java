@@ -120,12 +120,12 @@ public class DataController {
 
     @ResponseBody
     @PostMapping("/register/userdevice") //유저의 device 등록
-    String userDeviceRegister(@RequestBody UserDTO userDTO) {
+    Integer userDeviceRegister(@RequestBody UserDTO userDTO) {
         log.info("userPk의 : {}, deviceId 등록 : {}", userDTO.getUserPk(), userDTO.getDeviceId());
 
         UserDevice userDevice = new UserDevice();
 
-        String okSign;
+        Integer okSign;
 
         if(deviceRepository.findById(userDTO.getDeviceId()).isPresent()){ //입력한 deviceId가 DB에 존재한다면~
             if (!userDeviceRepository.findByUserPkAndDevice(new UserPk(userDTO.getUserPk()), new Device(userDTO.getDeviceId())).isPresent()){ // 특정 UserPk가 같은 Device 등록 방지
@@ -136,16 +136,18 @@ public class DataController {
             }
             else {
                 log.info("이미 등록된 device 입니다.");
-                okSign = "deviceDuplicate";
+                //okSign = "deviceDuplicate";
+                okSign = 1;
                 return okSign;
             }
         } else {
             log.info("존재하지 않는 device 입니다.");
-            okSign = "deviceNotFound";
+            //okSign = "deviceNotFound";
+            okSign = 2;
             return okSign;
         }
 
-        okSign = "Ok";
+        okSign = 0;
         return okSign;
     }
 
@@ -265,7 +267,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/update/sensing") // uno 보드에서 받아오는 정보들
     void sensing(@RequestBody SensingDTO sensingDTO) {
-        log.info("deviceId : {},  출입 방향 : {}", sensingDTO.getDeviceId(), sensingDTO.getState());
+        log.info("deviceId : {}, 출입 방향 : {}", sensingDTO.getDeviceId(), sensingDTO.getState());
 
         Sensing sensing = new Sensing();
         Power power = new Power();
@@ -284,7 +286,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/search/app") // App으로 넘겨주는 정보. 특정 Device를 기준으로 최신 순으로 조회
     String searchApp(@RequestBody DeviceDTO deviceDTO) {
-        log.info("deviceId:{}", deviceDTO.getDeviceId());
+        log.info("deviceId : {}", deviceDTO.getDeviceId());
 
         JsonArray obj = new JsonArray(); // Json 들이 들어갈 Array 선언
 
@@ -312,7 +314,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/search/web") // Web으로 넘겨주는 정보. 유저가 선택한 날짜를 기준으로 최신 순으로 조회
     String searchWeb(@RequestBody UserDTO userDTO){
-        log.info("UserPk:{}, LocalDate:{}", userDTO.getUserPk(), userDTO.getLocalDate());
+        log.info("UserPk : {}, LocalDate : {}", userDTO.getUserPk(), userDTO.getLocalDate());
 
         String userPkParam = userDTO.getUserPk();
         LocalDate localDate = userDTO.getLocalDate();
