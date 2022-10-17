@@ -233,7 +233,6 @@ public class DataController {
         jsonObject.addProperty("rx", rx);
 
         return jsonObject.toString();
-
     }
 
     @ResponseBody
