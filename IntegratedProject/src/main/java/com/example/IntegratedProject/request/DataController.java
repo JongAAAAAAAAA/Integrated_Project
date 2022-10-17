@@ -222,7 +222,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/search/rxbattery") // uno 보드 최신 배터리 양 조회
     String searchRxBattery(@RequestBody BatteryDTO batteryDTO) {
-        log.info("deviceId : {}", batteryDTO.getDeviceId());
+        log.info("rx - deviceId : {}", batteryDTO.getDeviceId());
 
         Optional<RxBattery> topByDeviceOrderByDateDesc = rxBatteryRepository.findTopByDeviceOrderByDateDesc(new Device(batteryDTO.getDeviceId()));
 
@@ -230,7 +230,7 @@ public class DataController {
 
         String rx = topByDeviceOrderByDateDesc.get().getRx();
 
-        jsonObject.addProperty("rx",rx);
+        jsonObject.addProperty("rx", rx);
 
         return jsonObject.toString();
 
@@ -239,7 +239,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/search/txbattery") // wemos 보드 최신 배터리 양 조회
     String searchTxBattery(@RequestBody BatteryDTO batteryDTO) {
-        log.info("deviceId : {}", batteryDTO.getDeviceId());
+        log.info("tx - deviceId : {}", batteryDTO.getDeviceId());
 
         Optional<TxBattery> topByDeviceOrderByDateDesc = txBatteryRepository.findTopByDeviceOrderByDateDesc(new Device(batteryDTO.getDeviceId()));
 
@@ -247,7 +247,7 @@ public class DataController {
 
         String tx = topByDeviceOrderByDateDesc.get().getTx();
 
-        jsonObject.addProperty("tx",tx);
+        jsonObject.addProperty("tx", tx);
 
         return jsonObject.toString();
     }
@@ -268,7 +268,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/search/power") // 아두이노 on off 최신 정보 조회
     String searchPower(@RequestBody PowerDTO powerDTO) {
-        log.info("deviceId : {}", powerDTO.getDeviceId());
+        log.info("power - deviceId : {}", powerDTO.getDeviceId());
 
         Optional<Power> topByDeviceOrderByDateDesc = powerRepository.findTopByDeviceOrderByDateDesc(new Device(powerDTO.getDeviceId()));
 
@@ -276,7 +276,7 @@ public class DataController {
 
         String power = topByDeviceOrderByDateDesc.get().getPower();
 
-        jsonObject.addProperty("power",power);
+        jsonObject.addProperty("power", power);
 
         return jsonObject.toString();
     }
@@ -284,7 +284,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/update/sensing") // uno 보드에서 받아오는 정보들
     void sensing(@RequestBody SensingDTO sensingDTO) {
-        log.info("deviceId : {}, 출입 방향 : {}", sensingDTO.getDeviceId(), sensingDTO.getState());
+        log.info("sensing - deviceId : {}, 출입 방향 : {}", sensingDTO.getDeviceId(), sensingDTO.getState());
 
         Sensing sensing = new Sensing();
         Power power = new Power();
@@ -303,7 +303,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/search/app") // App으로 넘겨주는 정보. 특정 Device를 기준으로 최신 순으로 조회
     String searchApp(@RequestBody DeviceDTO deviceDTO) {
-        log.info("deviceId : {}", deviceDTO.getDeviceId());
+        log.info("app - deviceId : {}", deviceDTO.getDeviceId());
 
         JsonArray obj = new JsonArray(); // Json 들이 들어갈 Array 선언
 
@@ -331,7 +331,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/search/web") // Web으로 넘겨주는 정보. 유저가 선택한 날짜를 기준으로 최신 순으로 조회
     String searchWeb(@RequestBody UserDTO userDTO){
-        log.info("UserPk : {}, LocalDate : {}", userDTO.getUserPk(), userDTO.getLocalDate());
+        log.info("web - UserPk : {}, LocalDate : {}", userDTO.getUserPk(), userDTO.getLocalDate());
 
         String userPkParam = userDTO.getUserPk();
         LocalDate localDate = userDTO.getLocalDate();
