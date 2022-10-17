@@ -93,7 +93,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/register/device") //기기 등록
     void deviceRegister(@RequestBody DeviceDTO deviceDTO){
-        log.info("DeviceId:{}", deviceDTO.getDeviceId());
+        log.info("deviceId 등록 : {}", deviceDTO.getDeviceId());
 
         Device device = new Device();
 
@@ -105,7 +105,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/register/user") //유저 등록
     String userRegister(@RequestBody UserDTO userDTO){
-        log.info("UserPk:{}", userDTO.getUserPk());
+        log.info("userPk 등록 : {}", userDTO.getUserPk());
 
         UserPk userPK = new UserPk();
 
@@ -121,7 +121,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/register/userdevice") //유저의 device 등록
     String userDeviceRegister(@RequestBody UserDTO userDTO) {
-        log.info("userPk:{}, deviceId:{}", userDTO.getUserPk(), userDTO.getDeviceId());
+        log.info("userPk의 : {}, deviceId 등록 : {}", userDTO.getUserPk(), userDTO.getDeviceId());
 
         UserDevice userDevice = new UserDevice();
 
@@ -152,7 +152,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/delete/user") // 회원 탈퇴, UserPk 조회 후 유저의 전체 device 삭제
     String userDelete(@RequestBody UserDTO userDTO){
-        log.info("userPk:{}", userDTO.getUserPk());
+        log.info("userPk 탈퇴 :{}", userDTO.getUserPk());
 
         UserPk userPK = new UserPk();
 
@@ -175,7 +175,7 @@ public class DataController {
     @PostMapping("/delete/user/option") // UserPk 조회 후, 유저의 device 등록 해제
     String userOptionalDelete(@RequestBody UserDTO userDTO){
 //        log.info("userPk:{}, index:{}", userDTO.getUserPk(), userDTO.getIndex());
-        log.info("userPk:{}, index:{}", userDTO.getUserPk(), userDTO.getDeviceId());
+        log.info("userPk의 : {}, deviceId 해제 : {}", userDTO.getUserPk(), userDTO.getDeviceId());
 
         Optional<UserDevice> byUserPkAndDevice = userDeviceRepository.findByUserPkAndDevice(new UserPk(userDTO.getUserPk()), new Device(userDTO.getDeviceId()));
 
@@ -196,7 +196,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/update/rxbattery") //uno 보드에서 받아오는 배터리 정보
     void rxBattery(@RequestBody BatteryDTO batteryDTO) {
-        log.info("RX배터리 용량:{}, deviceId:{}", batteryDTO.getBatteryCapacity(), batteryDTO.getDeviceId());
+        log.info("deviceId : {}, RX배터리 용량 : {} ", batteryDTO.getDeviceId(), batteryDTO.getBatteryCapacity());
 
         RxBattery rxBattery = new RxBattery();
 
@@ -209,7 +209,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/update/txbattery") //wemos 보드에서 받아오는 배터리 정보
     void txBattery(@RequestBody BatteryDTO batteryDTO) {
-        log.info("TX배터리 용량:{},deviceId:{}", batteryDTO.getBatteryCapacity(),batteryDTO.getDeviceId());
+        log.info("deviceId : {}, TX배터리 용량 : {} ", batteryDTO.getDeviceId(), batteryDTO.getBatteryCapacity());
 
         TxBattery txBattery = new TxBattery();
 
@@ -222,7 +222,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/search/rxbattery") // uno 보드 최신 배터리 양 조회
     String searchRxBattery(@RequestBody BatteryDTO batteryDTO) {
-        log.info("deviceId:{}", batteryDTO.getDeviceId());
+        log.info("deviceId : {}", batteryDTO.getDeviceId());
 
         Optional<RxBattery> topByDeviceOrderByDateDesc = rxBatteryRepository.findTopByDeviceOrderByDateDesc(new Device(batteryDTO.getDeviceId()));
 
@@ -234,7 +234,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/search/txbattery") // wemos 보드 최신 배터리 양 조회
     String searchTxBattery(@RequestBody BatteryDTO batteryDTO) {
-        log.info("deviceId:{}", batteryDTO.getDeviceId());
+        log.info("deviceId : {}", batteryDTO.getDeviceId());
 
         Optional<TxBattery> topByDeviceOrderByDateDesc = txBatteryRepository.findTopByDeviceOrderByDateDesc(new Device(batteryDTO.getDeviceId()));
 
@@ -259,7 +259,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/search/power") // 아두이노 on off 최신 정보 조회
     String searchPower(@RequestBody PowerDTO powerDTO) {
-        log.info("deviceId:{}", powerDTO.getDeviceId());
+        log.info("deviceId : {}", powerDTO.getDeviceId());
 
         Optional<Power> topByDeviceOrderByDateDesc = powerRepository.findTopByDeviceOrderByDateDesc(new Device(powerDTO.getDeviceId()));
 
@@ -271,7 +271,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/update/sensing")
     void sensing(@RequestBody SensingDTO sensingDTO) {
-        log.info("출입 방향:{}, deviceId:{}", sensingDTO.getState(), sensingDTO.getDeviceId());
+        log.info("deviceId : {},  출입 방향 : {}", sensingDTO.getDeviceId(), sensingDTO.getState());
 
         Sensing sensing = new Sensing();
         Power power = new Power();
