@@ -109,23 +109,25 @@ public class DataController {
 
         UserPk userPK = new UserPk();
 
+        JsonObject jsonObject = new JsonObject(); // 받아오는 객체를 Json 객체로 변환
+
         userPK.setUserPk(userDTO.getUserPk());
 
         userPkRepository.save(userPK);
 
-        String okSign = "OK";
+        jsonObject.addProperty("okSign","Ok");
 
-        return okSign;
+        return jsonObject.toString(); // App에게 OK 사인 리턴
     }
 
     @ResponseBody
     @PostMapping("/register/userdevice") //유저의 device 등록
-    Integer userDeviceRegister(@RequestBody UserDTO userDTO) {
+    String userDeviceRegister(@RequestBody UserDTO userDTO) {
         log.info("userPk의 : {}, deviceId 등록 : {}", userDTO.getUserPk(), userDTO.getDeviceId());
 
         UserDevice userDevice = new UserDevice();
 
-        Integer okSign;
+        JsonObject jsonObject = new JsonObject();
 
         if(deviceRepository.findById(userDTO.getDeviceId()).isPresent()){ //입력한 deviceId가 DB에 존재한다면~
             if (!userDeviceRepository.findByUserPkAndDevice(new UserPk(userDTO.getUserPk()), new Device(userDTO.getDeviceId())).isPresent()){ // 특정 UserPk가 같은 Device 등록 방지
@@ -136,19 +138,17 @@ public class DataController {
             }
             else {
                 log.info("이미 등록된 device 입니다.");
-                //okSign = "deviceDuplicate";
-                okSign = 1;
-                return okSign;
+                jsonObject.addProperty("okSign","deviceDuplicate");
+                return jsonObject.toString();
             }
         } else {
             log.info("존재하지 않는 device 입니다.");
-            //okSign = "deviceNotFound";
-            okSign = 2;
-            return okSign;
+            jsonObject.addProperty("okSign","deviceNotFound");
+            return jsonObject.toString();
         }
 
-        okSign = 0;
-        return okSign;
+        jsonObject.addProperty("okSign","Ok");
+        return jsonObject.toString();
     }
 
     @ResponseBody
@@ -157,6 +157,8 @@ public class DataController {
         log.info("userPk 탈퇴 :{}", userDTO.getUserPk());
 
         UserPk userPK = new UserPk();
+
+        JsonObject jsonObject = new JsonObject();
 
         userPK.setUserPk(userDTO.getUserPk());
 
@@ -168,9 +170,9 @@ public class DataController {
 
         userPkRepository.delete(userPK);
 
-        String okSign = "OK";
+        jsonObject.addProperty("okSign","Ok");
 
-        return okSign;
+        return jsonObject.toString();
     }
 
     @ResponseBody
@@ -182,11 +184,13 @@ public class DataController {
 
         UserDevice userDevice = byUserPkAndDevice.get();
 
+        JsonObject jsonObject = new JsonObject();
+
         userDeviceRepository.delete(userDevice);
 
-        String okSign = "OK";
+        jsonObject.addProperty("okSign","Ok");
 
-        return okSign;
+        return jsonObject.toString();
     }
 
     @ResponseBody
@@ -222,9 +226,14 @@ public class DataController {
 
         Optional<RxBattery> topByDeviceOrderByDateDesc = rxBatteryRepository.findTopByDeviceOrderByDateDesc(new Device(batteryDTO.getDeviceId()));
 
+        JsonObject jsonObject = new JsonObject();
+
         String rx = topByDeviceOrderByDateDesc.get().getRx();
 
-        return rx;
+        jsonObject.addProperty("rx",rx);
+
+        return jsonObject.toString();
+
     }
 
     @ResponseBody
@@ -234,9 +243,13 @@ public class DataController {
 
         Optional<TxBattery> topByDeviceOrderByDateDesc = txBatteryRepository.findTopByDeviceOrderByDateDesc(new Device(batteryDTO.getDeviceId()));
 
+        JsonObject jsonObject = new JsonObject();
+
         String tx = topByDeviceOrderByDateDesc.get().getTx();
 
-        return tx;
+        jsonObject.addProperty("tx",tx);
+
+        return jsonObject.toString();
     }
 
 //    @ResponseBody
@@ -259,9 +272,13 @@ public class DataController {
 
         Optional<Power> topByDeviceOrderByDateDesc = powerRepository.findTopByDeviceOrderByDateDesc(new Device(powerDTO.getDeviceId()));
 
+        JsonObject jsonObject = new JsonObject();
+
         String power = topByDeviceOrderByDateDesc.get().getPower();
 
-        return power;
+        jsonObject.addProperty("power",power);
+
+        return jsonObject.toString();
     }
 
     @ResponseBody
@@ -300,7 +317,7 @@ public class DataController {
         while(iterator.hasNext()){ // 리스트의 다음 인덱스가 존재하면 true 반환 (검사만 진행)
             Sensing next = iterator.next(); // 인덱스 값을 반환하고 다음 인덱스로 커서를 옮김 (반환 값 리턴)
 
-            JsonObject jsonObject = new JsonObject(); //받아오는 객체를 Json 객체로 변환
+            JsonObject jsonObject = new JsonObject(); // 받아오는 객체를 Json 객체로 변환
 
             jsonObject.addProperty("deiceId",next.getDevice().getId());
             jsonObject.addProperty("state",next.getState());
