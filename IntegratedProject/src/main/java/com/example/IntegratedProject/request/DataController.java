@@ -91,7 +91,7 @@ public class DataController {
 //    }
 
     @ResponseBody
-    @PostMapping("/register/device") //기기 등록
+    @PostMapping("/register/device") // 기기 등록
     void deviceRegister(@RequestBody DeviceDTO deviceDTO){
         log.info("deviceId 등록 : {}", deviceDTO.getDeviceId());
 
@@ -103,7 +103,7 @@ public class DataController {
     }
 
     @ResponseBody
-    @PostMapping("/register/user") //유저 등록
+    @PostMapping("/register/user") // 유저 등록
     String userRegister(@RequestBody UserDTO userDTO){
         log.info("userPk 등록 : {}", userDTO.getUserPk());
 
@@ -174,7 +174,6 @@ public class DataController {
     @ResponseBody
     @PostMapping("/delete/user/option") // UserPk 조회 후, 유저의 device 등록 해제
     String userOptionalDelete(@RequestBody UserDTO userDTO){
-//        log.info("userPk:{}, index:{}", userDTO.getUserPk(), userDTO.getIndex());
         log.info("userPk의 : {}, deviceId 해제 : {}", userDTO.getUserPk(), userDTO.getDeviceId());
 
         Optional<UserDevice> byUserPkAndDevice = userDeviceRepository.findByUserPkAndDevice(new UserPk(userDTO.getUserPk()), new Device(userDTO.getDeviceId()));
@@ -183,18 +182,13 @@ public class DataController {
 
         userDeviceRepository.delete(userDevice);
 
-//        Optional<List<UserDevice>> userPk = userDeviceRepository.findByUserPk(new UserPk(userDTO.getUserPk()));
-//        UserDevice userDeviceIndex = userPk.get().get(userDTO.getIndex()-1); // 배열의 인덱스는 0부터 시작하므로 index-1을 해줌
-//
-//        userDeviceRepository.delete(userDeviceIndex);// device Id 로 삭제해보기
-
         String okSign = "OK";
 
         return okSign;
     }
 
     @ResponseBody
-    @PostMapping("/update/rxbattery") //uno 보드에서 받아오는 배터리 정보
+    @PostMapping("/update/rxbattery") // uno 보드에서 받아오는 배터리 정보
     void rxBattery(@RequestBody BatteryDTO batteryDTO) {
         log.info("deviceId : {}, RX배터리 용량 : {} ", batteryDTO.getDeviceId(), batteryDTO.getBatteryCapacity());
 
@@ -207,7 +201,7 @@ public class DataController {
     }
 
     @ResponseBody
-    @PostMapping("/update/txbattery") //wemos 보드에서 받아오는 배터리 정보
+    @PostMapping("/update/txbattery") // wemos 보드에서 받아오는 배터리 정보
     void txBattery(@RequestBody BatteryDTO batteryDTO) {
         log.info("deviceId : {}, TX배터리 용량 : {} ", batteryDTO.getDeviceId(), batteryDTO.getBatteryCapacity());
 
@@ -269,7 +263,7 @@ public class DataController {
     }
 
     @ResponseBody
-    @PostMapping("/update/sensing")
+    @PostMapping("/update/sensing") // uno 보드에서 받아오는 정보들
     void sensing(@RequestBody SensingDTO sensingDTO) {
         log.info("deviceId : {},  출입 방향 : {}", sensingDTO.getDeviceId(), sensingDTO.getState());
 
@@ -279,16 +273,16 @@ public class DataController {
         power.setPower(sensingDTO.getPower().toString());
         power.setDevice(new Device(sensingDTO.getDeviceId()));
 
-        sensing.setState(sensingDTO.getState().toString());
-        sensing.setDevice(new Device(sensingDTO.getDeviceId()));
-        sensing.setUserPk(new UserPk(sensingDTO.getUserPk()));
-        sensing.setPower(power);
+        sensing.setState(sensingDTO.getState().toString()); // In, Out 정보
+        sensing.setDevice(new Device(sensingDTO.getDeviceId())); // Device Id 값
+        sensing.setUserPk(new UserPk(sensingDTO.getUserPk())); // UserPK 값
+        sensing.setPower(power); // On, Off 정보 및 Power Entity Cascade로 생성
 
         sensingRepository.save(sensing);
     }
 
     @ResponseBody
-    @PostMapping("/search/app")//App으로 넘겨주는 정보. 특정 Device를 기준으로 최신 순으로 조회
+    @PostMapping("/search/app") // App으로 넘겨주는 정보. 특정 Device를 기준으로 최신 순으로 조회
     String searchApp(@RequestBody DeviceDTO deviceDTO) {
         log.info("deviceId:{}", deviceDTO.getDeviceId());
 
@@ -297,9 +291,9 @@ public class DataController {
         String deviceIdParam = deviceDTO.getDeviceId();
 
         List<Sensing> deviceIdOrderByDateDesc = sensingRepository.findTop20ByDeviceOrderByDateDesc(new Device(deviceIdParam)).get();
-        //디바이스 값을 받아 DB에서 최신 순으로 20개 찾기
+        // 디바이스 값을 받아 DB에서 최신 순으로 20개 찾기
 
-        Iterator<Sensing> iterator = deviceIdOrderByDateDesc.iterator();//iterator() : 리스트의 데이터를 반복하는 반복자 객체를 선언
+        Iterator<Sensing> iterator = deviceIdOrderByDateDesc.iterator(); // iterator() : 리스트의 데이터를 반복하는 반복자 객체를 선언
 
         while(iterator.hasNext()){ // 리스트의 다음 인덱스가 존재하면 true 반환 (검사만 진행)
             Sensing next = iterator.next(); // 인덱스 값을 반환하고 다음 인덱스로 커서를 옮김 (반환 값 리턴)
@@ -316,15 +310,15 @@ public class DataController {
         return obj.toString();
     }
     @ResponseBody
-    @PostMapping("/search/web")
-    String searchWeb(@RequestBody UserDTO userDTO){//Web으로 넘겨주는 정보. 유저가 선택한 날짜를 기준으로 최신 순으로 조회
+    @PostMapping("/search/web") // Web으로 넘겨주는 정보. 유저가 선택한 날짜를 기준으로 최신 순으로 조회
+    String searchWeb(@RequestBody UserDTO userDTO){
         log.info("UserPk:{}, LocalDate:{}", userDTO.getUserPk(), userDTO.getLocalDate());
 
         String userPkParam = userDTO.getUserPk();
         LocalDate localDate = userDTO.getLocalDate();
 
         List<Sensing> sensing = sensingRepository.findByUserPkAndLocalDateOrderByDateDesc(new UserPk(userPkParam), localDate).get();
-        //UserPK 값과 날짜를 받아 DB에서 최신 순으로 찾기
+        // UserPK 값과 날짜를 받아 DB에서 최신 순으로 찾기
 
         Iterator<Sensing> iterator = sensing.iterator(); // 리스트의 데이터 담고 반복하는 반복자 객체를 선언
 
@@ -333,7 +327,7 @@ public class DataController {
         while (iterator.hasNext()){
             Sensing next = iterator.next(); // 인덱스 값을 반환하고 다음 인덱스로 커서를 옮김 (반환 값 리턴)
 
-            JsonObject jsonObject = new JsonObject(); //받아오는 객체를 Json 객체로 변환
+            JsonObject jsonObject = new JsonObject(); // 받아오는 객체를 Json 객체로 변환
 
             jsonObject.addProperty("deiceId",next.getDevice().getId());
             jsonObject.addProperty("state",next.getState());
