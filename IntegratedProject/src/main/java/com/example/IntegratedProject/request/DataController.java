@@ -318,7 +318,7 @@ public class DataController {
 
             JsonObject jsonObject = new JsonObject(); // 받아오는 객체를 Json 객체로 변환
 
-            jsonObject.addProperty("deiceId",next.getDevice().getId());
+            jsonObject.addProperty("deviceId",next.getDevice().getId());
             jsonObject.addProperty("state",next.getState());
             jsonObject.addProperty("date",next.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             jsonObject.addProperty("power",next.getPower().getPower());
@@ -347,7 +347,7 @@ public class DataController {
 
             JsonObject jsonObject = new JsonObject(); // 받아오는 객체를 Json 객체로 변환
 
-            jsonObject.addProperty("deiceId",next.getDevice().getId());
+            jsonObject.addProperty("deviceId",next.getDevice().getId());
             jsonObject.addProperty("state",next.getState());
             jsonObject.addProperty("date",next.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             jsonObject.addProperty("power",next.getPower().getPower());
