@@ -36,57 +36,21 @@ public class DataController {
 
     @GetMapping
     String index() {
-        return "/form/index";
+        return "index";
     }
 
-    @GetMapping("/form/features")
+    @GetMapping("features")
     String features() {
-        return "form/features";
+        return "features";
     }
 
-    @GetMapping("/form/contact")
+    @GetMapping("contact")
     String contact() {
-        return "form/contact";
+        return "contact";
     }
 
-//    @GetMapping("/form/user")
-//    String user(Model model){
-//        List<TestObj> list1 = new ArrayList<>();
-//        TestObj testObj1 = new TestObj();
-//        TestObj testObj2 = new TestObj();
-//        TestObj testObj3 = new TestObj();
-//
-//        testObj1.setDeviceId("123");
-//        testObj2.setDeviceId("456");
-//        testObj3.setDeviceId("789");
-//
-//        testObj1.setOnOff("On");
-//        testObj2.setOnOff("Off");
-//        testObj3.setOnOff("On");
-//
-//        testObj1.setRxBattery("90");
-//        testObj2.setRxBattery("80");
-//        testObj3.setRxBattery("70");
-//
-//        testObj1.setTxBattery("70");
-//        testObj2.setTxBattery("80");
-//        testObj3.setTxBattery("90");
-//
-//        testObj1.setTime(LocalDateTime.now());
-//        testObj2.setTime(LocalDateTime.now());
-//        testObj3.setTime(LocalDateTime.now());
-//
-//        testObj1.setVector("In");
-//        testObj2.setVector("Out");
-//        testObj3.setVector("In");
-//
-//        list1.add(testObj1);
-//        list1.add(testObj2);
-//        list1.add(testObj3);
-//
-//        model.addAttribute("test",list1);
-//        return "form/user";
-//    }
+    @GetMapping("user")
+    String user() { return "user"; }
 
     @ResponseBody
     @PostMapping("/register/device") // 기기 등록
