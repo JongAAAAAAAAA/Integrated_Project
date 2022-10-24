@@ -291,26 +291,30 @@ public class DataController {
     }
 
     @GetMapping("/search/web") // Web으로 넘겨주는 정보. 유저가 선택한 날짜를 기준으로 최신 순으로 조회
-    String searchWeb(@RequestParam(value = "id")  String id,
-                     @RequestParam(value = "datetimepicker1Input") String datetimepicker1Input,
+    String searchWeb(@RequestParam(value = "id", required = false)  String id,
+                     @RequestParam(value = "datetimepicker1Input", required = false) String datetimepicker1Input,
                      Model model){
         log.info("web - UserPk : {}, LocalDate : {}", id, datetimepicker1Input);
 
-        String userPkParam = id;
+        if(id == null || datetimepicker1Input == null){
+
+            String userPkParam = id;
 //        LocalDate localDate = datetimepicker1Input;
-        String year = datetimepicker1Input.substring(0,4);
-        String month = datetimepicker1Input.substring(6,8);
-        String date = datetimepicker1Input.substring(10,12);
+            String year = datetimepicker1Input.substring(0,4);
+            String month = datetimepicker1Input.substring(6,8);
+            String date = datetimepicker1Input.substring(10,12);
 
-        log.info("year : {}, month : {}, date : {}",year,month,date);
-        LocalDate of = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(date));
+            log.info("year : {}, month : {}, date : {}",year,month,date);
+            LocalDate of = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(date));
 
-        List<Sensing> sensing = sensingRepository.findByUserPkAndLocalDateOrderByDateDesc(new UserPk(id), of).get();
-        // UserPK 값과 날짜를 받아 DB에서 최신 순으로 찾기
+            List<Sensing> sensing = sensingRepository.findByUserPkAndLocalDateOrderByDateDesc(new UserPk(id), of).get();
+            // UserPK 값과 날짜를 받아 DB에서 최신 순으로 찾기
 
-        model.addAttribute("test", sensing);
+            model.addAttribute("test", sensing);
 
-        return "user";
+            return "user";
+        }
+        else { return "user"; }
     }
 
 //    @ResponseBody
