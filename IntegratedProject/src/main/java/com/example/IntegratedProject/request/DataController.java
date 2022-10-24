@@ -116,7 +116,7 @@ public class DataController {
     @ResponseBody
     @PostMapping("/delete/user") // 회원 탈퇴, UserPk 조회 후 유저의 전체 device 삭제
     String userDelete(@RequestBody UserDTO userDTO){
-        log.info("userPk 탈퇴 :{}", userDTO.getUserPk());
+        log.info("userPk 탈퇴 : {}", userDTO.getUserPk());
 
         UserPk userPK = new UserPk();
 
@@ -244,7 +244,7 @@ public class DataController {
 
     @ResponseBody
     @PostMapping("/update/sensing") // uno 보드에서 받아오는 정보들
-    void sensing(@RequestBody SensingDTO sensingDTO) {
+    String sensing(@RequestBody SensingDTO sensingDTO) {
         log.info("sensing - deviceId : {}, 출입 방향 : {}", sensingDTO.getDeviceId(), sensingDTO.getState());
 
         Sensing sensing = new Sensing();
@@ -259,6 +259,8 @@ public class DataController {
         sensing.setPower(power); // On, Off 정보 및 Power Entity Cascade로 생성
 
         sensingRepository.save(sensing);
+
+        return "Ok";
     }
 
     @ResponseBody
