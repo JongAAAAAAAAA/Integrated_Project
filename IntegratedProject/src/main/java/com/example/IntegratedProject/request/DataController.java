@@ -244,7 +244,7 @@ public class DataController {
 
     @ResponseBody
     @PostMapping("/update/sensing") // uno 보드에서 받아오는 정보들
-    String sensing(@RequestBody SensingDTO sensingDTO) {
+    void sensing(@RequestBody SensingDTO sensingDTO) {
         log.info("sensing - deviceId : {}, 출입 방향 : {}", sensingDTO.getDeviceId(), sensingDTO.getState());
 
         Sensing sensing = new Sensing();
@@ -259,8 +259,6 @@ public class DataController {
         sensing.setPower(power); // On, Off 정보 및 Power Entity Cascade로 생성
 
         sensingRepository.save(sensing);
-
-        return "Ok";
     }
 
     @ResponseBody
