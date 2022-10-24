@@ -32,7 +32,7 @@ public class TxBattery {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime date = LocalDateTime.now();
 
-    @ManyToOne//(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "DEVICE_ID")//어떤 column과 연결이 될 지 설정
     private Device device;
 }

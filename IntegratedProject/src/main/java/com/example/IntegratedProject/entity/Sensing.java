@@ -33,12 +33,12 @@ public class Sensing {
     private LocalDateTime date = LocalDateTime.now();
 
     @NotNull
-    @Column(name = "LOCALDATE") // 사실 이 엔티티도 필요가 없을거같은데
+    @Column(name = "LOCALDATE")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="Asia/Seoul")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate localDate = date.toLocalDate();
 
-    @ManyToOne//(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "DEVICE_ID")//어떤 column과 연결이 될 지 설정
     private Device device;
 
@@ -46,16 +46,7 @@ public class Sensing {
     @JoinColumn(name = "USER_PK")
     private UserPk userPk;
 
-    @ManyToOne(cascade = CascadeType.PERSIST) //센싱되는 시점에서의 POWER값을 알기 위해 조인
+    @ManyToOne(cascade = CascadeType.PERSIST) //센싱되는 시점에서의 POWER값을 Power Entity에 자동 생성
     @JoinColumn(name = "POWER")
     private Power power;
-//    @ManyToOne //센싱되는 시점에서의 RB값을 알기 위해 조인
-//    @JoinColumn(name = "RB")
-//    private RBattery rbattery;
-//
-//    @ManyToOne //센싱되는 시점에서의 LB값을 알기 위해 조인
-//    @JoinColumn(name = "LB")
-//    private LBattery lbattery;
-
-
 }

@@ -13,9 +13,7 @@ import javax.persistence.*;
 @ToString
 @Entity
 public class Device {
-
     @Id  // Primary Key 지정
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)  // AUTO_INCREMENT 설정 (id값이 null일 경우 자동 생성)
     @Column(name = "DEVICE_ID")  // 컬럼 지정
     private String id;
 }
