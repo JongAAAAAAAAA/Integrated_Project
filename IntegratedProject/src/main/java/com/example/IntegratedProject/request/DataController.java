@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -231,20 +232,21 @@ public class DataController {
     }
 
     @ResponseBody
-    @PostMapping("/update/sensing") // uno 보드에서 받아오는 정보들
-    void sensing(@RequestBody SensingDTO sensingDTO) {
-        log.info("sensing - deviceId : {}, 출입 방향 : {}", sensingDTO.getDeviceId(), sensingDTO.getState());
+    @GetMapping("/update/sensing") // uno 보드에서 받아오는 정보들
+    void sensing(@RequestParam(value = "state") String state,
+                 @RequestParam(value = "deviceId") String deviceId,
+                 @RequestParam(value = "power") String power) {
+        log.info("sensing - deviceId : {}, power: {}, 출입 방향 : {}", deviceId, power, state);
 
         Sensing sensing = new Sensing();
-        Power power = new Power();
+        Power power1 = new Power();
 
-        power.setPower(sensingDTO.getPower().toString());
-        power.setDevice(new Device(sensingDTO.getDeviceId()));
+        power1.setPower(power);
+        power1.setDevice(new Device(deviceId));
 
-        sensing.setState(sensingDTO.getState().toString()); // In, Out 정보
-        sensing.setDevice(new Device(sensingDTO.getDeviceId())); // Device Id 값
-        sensing.setUserPk(new UserPk(sensingDTO.getUserPk())); // UserPK 값
-        sensing.setPower(power); // On, Off 정보 및 Power Entity Cascade로 생성
+        sensing.setState(state); // In, Out 정보
+        sensing.setDevice(new Device(deviceId)); // Device Id 값
+        sensing.setPower(power1); // On, Off 정보 및 Power Entity Cascade로 생성
 
         sensingRepository.save(sensing);
     }
@@ -279,23 +281,33 @@ public class DataController {
     }
 
     @GetMapping("/search/web") // Web으로 넘겨주는 정보. 유저가 선택한 날짜를 기준으로 최신 순으로 조회
-    String searchWeb(@RequestParam(value = "id", required = false)  String id,
+    String searchWeb(@RequestParam(value = "userPk", required = false)  String userPk,
                      @RequestParam(value = "datetimepicker1Input", required = false) String datetimepicker1Input,
                      Model model){
-        log.info("web - UserPk : {}, LocalDate : {}", id, datetimepicker1Input);
+        log.info("web - UserPk : {}, LocalDate : {}", userPk, datetimepicker1Input);
 
-        if(id == null || datetimepicker1Input == null){
+        Optional<List<UserDevice>> deviceByUserPk = userDeviceRepository.findDeviceByUserPk(new UserPk(userPk));
+        //입력한 userPk로 UserDevice 테이블에서 deviceId 리스트로 가져온 것.
+
+        if(userPk != null && datetimepicker1Input != null){
             String year = datetimepicker1Input.substring(0,4);
             String month = datetimepicker1Input.substring(6,8);
             String date = datetimepicker1Input.substring(10,12);
 
             log.info("year : {}, month : {}, date : {}",year,month,date);
+
             LocalDate of = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(date));
 
-            List<Sensing> sensing = sensingRepository.findByUserPkAndLocalDateOrderByDateDesc(new UserPk(id), of).get();
-            // UserPK 값과 날짜를 받아 DB에서 최신 순으로 찾기
+            List<Sensing> sensings = new ArrayList<>();
 
-            model.addAttribute("test", sensing);
+            for(int i =0; i<deviceByUserPk.get().size(); i++){
+                Device oneDevice = deviceByUserPk.get().get(i).getDevice();
+
+                List<Sensing> sensing = sensingRepository.findByDeviceAndLocalDateOrderByDateDesc(new Device(oneDevice.getId()), of).get();
+
+                sensings.addAll(sensing);
+            }
+            model.addAttribute("sensings", sensings); // sorting 해볼까 말까~?
 
             return "user";
         }

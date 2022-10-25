@@ -11,5 +11,5 @@ import java.util.Optional;
 
 public interface SensingRepository extends JpaRepository<Sensing, Integer> {
     Optional<List<Sensing>> findTop20ByDeviceOrderByDateDesc(Device device);
-    Optional<List<Sensing>> findByUserPkAndLocalDateOrderByDateDesc(UserPk userPk, LocalDate localDate);
+    Optional<List<Sensing>> findByDeviceAndLocalDateOrderByDateDesc(Device device, LocalDate localDate);
 }
