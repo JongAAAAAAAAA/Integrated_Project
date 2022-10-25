@@ -214,19 +214,6 @@ public class DataController {
         return jsonObject.toString();
     }
 
-//    @ResponseBody
-//    @PostMapping("/update/power") // 아두이노 on off 정보
-//    void power(@RequestBody PowerDTO powerDTO) {
-//        log.info("작동 여부:{}, deviceId:{}", powerDTO.getPower(), powerDTO.getDeviceId());
-//
-//        Power power = new Power();
-//
-//        power.setPower(powerDTO.getPower().toString());
-//        power.setDevice(new Device(powerDTO.getDeviceId()));
-//
-//        powerRepository.save(power);
-//    }
-
     @ResponseBody
     @PostMapping("/search/power") // 아두이노 on off 최신 정보 조회
     String searchPower(@RequestBody PowerDTO powerDTO) {
