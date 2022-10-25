@@ -156,14 +156,15 @@ public class DataController {
     }
 
     @ResponseBody
-    @PostMapping("/update/rxbattery") // uno 보드에서 받아오는 배터리 정보
-    void rxBattery(@RequestBody BatteryDTO batteryDTO) {
-        log.info("deviceId : {}, RX배터리 용량 : {} ", batteryDTO.getDeviceId(), batteryDTO.getBatteryCapacity());
+    @GetMapping("/update/rxbattery") // uno 보드에서 받아오는 배터리 정보
+    void rxBattery(@RequestParam(value = "batteryCapacity") String batteryCapacity,
+                   @RequestParam(value = "deviceId") String deviceId) {
+        log.info("deviceId : {}, RX배터리 용량 : {} ", deviceId, batteryCapacity);
 
         RxBattery rxBattery = new RxBattery();
 
-        rxBattery.setRx(batteryDTO.getBatteryCapacity());
-        rxBattery.setDevice(new Device(batteryDTO.getDeviceId()));
+        rxBattery.setRx(batteryCapacity);
+        rxBattery.setDevice(new Device(deviceId));
 
         rxBatteryRepository.save(rxBattery);
     }
@@ -297,9 +298,6 @@ public class DataController {
         log.info("web - UserPk : {}, LocalDate : {}", id, datetimepicker1Input);
 
         if(id == null || datetimepicker1Input == null){
-
-            String userPkParam = id;
-//        LocalDate localDate = datetimepicker1Input;
             String year = datetimepicker1Input.substring(0,4);
             String month = datetimepicker1Input.substring(6,8);
             String date = datetimepicker1Input.substring(10,12);
@@ -316,34 +314,4 @@ public class DataController {
         }
         else { return "user"; }
     }
-
-//    @ResponseBody
-//    @PostMapping("/search/web") // Web으로 넘겨주는 정보. 유저가 선택한 날짜를 기준으로 최신 순으로 조회
-//    String searchWeb(@RequestBody UserDTO userDTO){
-//        log.info("web - UserPk : {}, LocalDate : {}", userDTO.getUserPk(), userDTO.getLocalDate());
-//
-//        String userPkParam = userDTO.getUserPk();
-//        LocalDate localDate = userDTO.getLocalDate();
-//
-//        List<Sensing> sensing = sensingRepository.findByUserPkAndLocalDateOrderByDateDesc(new UserPk(userPkParam), localDate).get();
-//        // UserPK 값과 날짜를 받아 DB에서 최신 순으로 찾기
-//
-//        Iterator<Sensing> iterator = sensing.iterator(); // 리스트의 데이터 담고 반복하는 반복자 객체를 선언
-//
-//        JsonArray obj = new JsonArray();// Json 들이 들어갈 Array 선언
-//
-//        while (iterator.hasNext()){
-//            Sensing next = iterator.next(); // 인덱스 값을 반환하고 다음 인덱스로 커서를 옮김 (반환 값 리턴)
-//
-//            JsonObject jsonObject = new JsonObject(); // 받아오는 객체를 Json 객체로 변환
-//
-//            jsonObject.addProperty("deviceId",next.getDevice().getId());
-//            jsonObject.addProperty("state",next.getState());
-//            jsonObject.addProperty("date",next.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-//            jsonObject.addProperty("power",next.getPower().getPower());
-//
-//            obj.add(jsonObject);
-//        }
-//        return obj.toString();
-//    }
 }
