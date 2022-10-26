@@ -17,10 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,8 +29,8 @@ public class DataController {
     private final PowerRepository powerRepository;
     private final UserDeviceRepository userDeviceRepository;
     private final DeviceRepository deviceRepository;
-    private final DeviceService deviceService;
     private final UserPkRepository userPkRepository;
+    private final DeviceService deviceService;
 
     @GetMapping
     String index() {
@@ -304,10 +301,17 @@ public class DataController {
                 Device oneDevice = deviceByUserPk.get().get(i).getDevice();
 
                 List<Sensing> sensing = sensingRepository.findByDeviceAndLocalDateOrderByDateDesc(new Device(oneDevice.getId()), of).get();
-
-                sensings.addAll(sensing);
+                // 웹에서 로그인 한 User가 가지고 있는 기기들을 날짜 최신순으로 리스트에 저장
+                sensings.addAll(sensing); // 모든 리스트들을 저장
             }
-            model.addAttribute("sensings", sensings); // sorting 해볼까 말까~?
+            Collections.sort(sensings, new Comparator<Sensing>() { // 사용자가 가진 기기가 여러개 일 때 날짜 최신 순으로 sorting
+                @Override
+                public int compare(Sensing s1, Sensing s2) {
+                    return s1.getDate().compareTo(s2.getDate());
+                }
+            }.reversed());
+
+            model.addAttribute("sensings", sensings);
 
             return "user";
         }
