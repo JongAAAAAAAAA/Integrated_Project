@@ -42,7 +42,7 @@ public class Sensing {
     @JoinColumn(name = "DEVICE_ID") // 어떤 column과 연결이 될 지 설정
     private Device device;
 
-    @ManyToOne(cascade = CascadeType.PERSIST) // 센싱되는 시점에서의 POWER값을 Power Entity에 자동 생성
+    @ManyToOne(cascade = CascadeType.ALL) // 센싱되는 시점에서의 POWER값을 Power Entity에 자동 생성
     @JoinColumn(name = "POWER")
     private Power power;
 }

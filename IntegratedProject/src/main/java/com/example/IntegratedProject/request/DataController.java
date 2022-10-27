@@ -299,19 +299,21 @@ public class DataController {
             String month = datetimepicker1Input.substring(6,8);
             String date = datetimepicker1Input.substring(10,12);
 
-            log.info("year : {}, month : {}, date : {}",year,month,date);
+            log.info("year : {}, month : {}, date : {}", year, month, date);
 
             LocalDate of = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(date));
 
             List<Sensing> sensings = new ArrayList<>();
 
-            for(int i =0; i<deviceByUserPk.get().size(); i++){
+            for(int i = 0; i<deviceByUserPk.get().size(); i++){
                 Device oneDevice = deviceByUserPk.get().get(i).getDevice();
 
                 List<Sensing> sensing = sensingRepository.findByDeviceAndLocalDateOrderByDateDesc(new Device(oneDevice.getId()), of).get();
                 // 웹에서 로그인 한 User가 가지고 있는 기기들을 날짜 최신순으로 리스트에 저장
+
                 sensings.addAll(sensing); // 모든 리스트들을 저장
             }
+
             Collections.sort(sensings, new Comparator<Sensing>() { // 사용자가 가진 기기가 여러개 일 때 날짜 최신 순으로 sorting
                 @Override
                 public int compare(Sensing s1, Sensing s2) {
@@ -326,9 +328,10 @@ public class DataController {
             model.addAttribute("sensings", sensings);
             model.addAttribute("pagePage", listSensing.getContent());
             model.addAttribute("totalPage", totalPage);
-            log.info("pagePage:{}", listSensing.getContent());
+
+            //log.info("pagePage:{}", listSensing.getContent());
             log.info("sensings:{}", sensings);
-            log.info("totalPage:{}", totalPage);
+            //log.info("totalPage:{}", totalPage);
 
             return "user";
         }

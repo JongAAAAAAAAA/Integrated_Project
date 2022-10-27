@@ -38,19 +38,23 @@
     </form>
     <table class="table table-success table-striped">
         <tr>
-            <th>기기 번호</th>
+            <th>No.</th>
+            <th>기기 ID</th>
             <th>시간</th>
             <th>방향</th>
+            <th>전원</th>
         </tr>
 <!--        <tr th:each="sensingsObj : ${pagePage}">-->
 <!--            <td th:text="${#strings.substring(sensingsObj.device,10,13)}">기기 번호</td>-->
 <!--            <td th:text="${#strings.substring(sensingsObj.date,11,19)}">시간</td>-->
 <!--            <td th:text="${sensingsObj.state}">방향</td>-->
 <!--        </tr>-->
-        <tr th:each="sensingsObj : ${sensings}">
-            <td th:text="${#strings.substring(sensingsObj.device,10,13)}">기기 번호</td>
+        <tr th:each="sensingsObj,i : ${sensings}">
+            <td th:text="${i.count}"></td>
+            <td th:text="${sensingsObj.device.id}">기기 ID</td>
             <td th:text="${#strings.substring(sensingsObj.date,11,19)}">시간</td>
             <td th:text="${sensingsObj.state}">방향</td>
+            <td th:text="${sensingsObj.power.power}">전원</td>
         </tr>
     </table>
 
