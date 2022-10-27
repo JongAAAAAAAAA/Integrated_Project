@@ -3,20 +3,22 @@ package com.example.IntegratedProject.request;
 import com.example.IntegratedProject.dao.*;
 import com.example.IntegratedProject.entity.*;
 import com.example.IntegratedProject.request.dto.*;
-import com.example.IntegratedProject.service.DeviceService;
+import com.example.IntegratedProject.service.*;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
 import java.util.*;
 
 @Slf4j
@@ -31,6 +33,7 @@ public class DataController {
     private final DeviceRepository deviceRepository;
     private final UserPkRepository userPkRepository;
     private final DeviceService deviceService;
+    private final SensingService sensingService;
 
     @GetMapping
     String index() {
@@ -280,11 +283,16 @@ public class DataController {
     @GetMapping("/search/web") // Web으로 넘겨주는 정보. 유저가 선택한 날짜를 기준으로 최신 순으로 조회
     String searchWeb(@RequestParam(value = "userPk", required = false)  String userPk,
                      @RequestParam(value = "datetimepicker1Input", required = false) String datetimepicker1Input,
+                     @RequestParam(value = "page", defaultValue = "1", required = false) int page,
                      Model model){
         log.info("web - UserPk : {}, LocalDate : {}", userPk, datetimepicker1Input);
 
         Optional<List<UserDevice>> deviceByUserPk = userDeviceRepository.findDeviceByUserPk(new UserPk(userPk));
         //입력한 userPk로 UserDevice 테이블에서 deviceId 리스트로 가져온 것.
+
+        Page<Sensing> listSensing = sensingService.list(page);
+
+        int totalPage = listSensing.getTotalPages(); // 전체 페이지 개수
 
         if(userPk != null && datetimepicker1Input != null){
             String year = datetimepicker1Input.substring(0,4);
@@ -312,9 +320,55 @@ public class DataController {
             }.reversed());
 
             model.addAttribute("sensings", sensings);
+            model.addAttribute("pagePage", listSensing.getContent());
+            model.addAttribute("totalPage", totalPage);
+            log.info("pagePage:{}", listSensing.getContent());
+            log.info("sensings:{}", sensings);
+            log.info("totalPage:{}", totalPage);
 
             return "user";
         }
         else { return "user"; }
     }
+
+//    @GetMapping("/search/web") // Web으로 넘겨주는 정보. 유저가 선택한 날짜를 기준으로 최신 순으로 조회
+//    String searchWeb(@RequestParam(value = "userPk", required = false)  String userPk,
+//                     @RequestParam(value = "datetimepicker1Input", required = false) String datetimepicker1Input,
+//                     Model model){
+//        log.info("web - UserPk : {}, LocalDate : {}", userPk, datetimepicker1Input);
+//
+//        Optional<List<UserDevice>> deviceByUserPk = userDeviceRepository.findDeviceByUserPk(new UserPk(userPk));
+//        //입력한 userPk로 UserDevice 테이블에서 deviceId 리스트로 가져온 것.
+//
+//        if(userPk != null && datetimepicker1Input != null){
+//            String year = datetimepicker1Input.substring(0,4);
+//            String month = datetimepicker1Input.substring(6,8);
+//            String date = datetimepicker1Input.substring(10,12);
+//
+//            log.info("year : {}, month : {}, date : {}",year,month,date);
+//
+//            LocalDate of = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(date));
+//
+//            List<Sensing> sensings = new ArrayList<>();
+//
+//            for(int i =0; i<deviceByUserPk.get().size(); i++){
+//                Device oneDevice = deviceByUserPk.get().get(i).getDevice();
+//
+//                List<Sensing> sensing = sensingRepository.findByDeviceAndLocalDateOrderByDateDesc(new Device(oneDevice.getId()), of).get();
+//                // 웹에서 로그인 한 User가 가지고 있는 기기들을 날짜 최신순으로 리스트에 저장
+//                sensings.addAll(sensing); // 모든 리스트들을 저장
+//            }
+//            Collections.sort(sensings, new Comparator<Sensing>() { // 사용자가 가진 기기가 여러개 일 때 날짜 최신 순으로 sorting
+//                @Override
+//                public int compare(Sensing s1, Sensing s2) {
+//                    return s1.getDate().compareTo(s2.getDate());
+//                }
+//            }.reversed());
+//
+//            model.addAttribute("sensings", sensings);
+//
+//            return "user";
+//        }
+//        else { return "user"; }
+//    }
 }

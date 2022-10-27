@@ -42,12 +42,25 @@
             <th>시간</th>
             <th>방향</th>
         </tr>
+<!--        <tr th:each="sensingsObj : ${pagePage}">-->
+<!--            <td th:text="${#strings.substring(sensingsObj.device,10,13)}">기기 번호</td>-->
+<!--            <td th:text="${#strings.substring(sensingsObj.date,11,19)}">시간</td>-->
+<!--            <td th:text="${sensingsObj.state}">방향</td>-->
+<!--        </tr>-->
         <tr th:each="sensingsObj : ${sensings}">
-            <td th:text="${#strings.substring(sensingsObj.device,10,13)}">기기 id</td>
+            <td th:text="${#strings.substring(sensingsObj.device,10,13)}">기기 번호</td>
             <td th:text="${#strings.substring(sensingsObj.date,11,19)}">시간</td>
             <td th:text="${sensingsObj.state}">방향</td>
         </tr>
     </table>
+
+    <div class="pagination">
+        <ul>
+            <li th:each="page : ${#numbers.sequence(1, totalPage)}">
+                <a th:href="@{/search/web(datetimepicker1Input=${#datetimepicker1Input},userPk=${userPk},page=${page})}" th:text="${page}"></a>
+            </li>
+        </ul>
+    </div>
 </div>
 <footer class="mt-auto text-black text-center">
     <p>Cover 2022, Gavengers Allrights reserved </p>
