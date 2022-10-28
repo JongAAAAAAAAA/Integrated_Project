@@ -50,7 +50,7 @@
 <!--            <td th:text="${sensingsObj.state}">방향</td>-->
 <!--        </tr>-->
         <tr th:each="sensingsObj,i : ${sensings}">
-            <td th:text="${i.count}"></td>
+            <td th:text="${i.count}">No.</td>
             <td th:text="${sensingsObj.device.id}">기기 ID</td>
             <td th:text="${#strings.substring(sensingsObj.date,11,19)}">시간</td>
             <td th:text="${sensingsObj.state}">방향</td>
@@ -58,13 +58,13 @@
         </tr>
     </table>
 
-    <div class="pagination">
-        <ul>
-            <li th:each="page : ${#numbers.sequence(1, totalPage)}">
-                <a th:href="@{/search/web(datetimepicker1Input=${#datetimepicker1Input},userPk=${userPk},page=${page})}" th:text="${page}"></a>
-            </li>
-        </ul>
-    </div>
+<!--    <div class="pagination">-->
+<!--        <ul>-->
+<!--            <li th:each="page : ${#numbers.sequence(1, totalPage)}">-->
+<!--                <a th:href="@{/search/web(datetimepicker1Input=${#datetimepicker1Input},userPk=${userPk},page=${page})}" th:text="${page}"></a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
 </div>
 <footer class="mt-auto text-black text-center">
     <p>Cover 2022, Gavengers Allrights reserved </p>
@@ -115,7 +115,9 @@
             success: function (res) {
                 // 이메일, 성별, 닉네임, 프로필이미지
                 var id = res.id;
-                document.getElementById("id").value = parseInt(id);
+                var name = res.properties.nickname;
+                document.getElementById("name").innerHTML = name;
+                document.getElementById("id").value = String(id);
                 console.log(id);
             }
         });
