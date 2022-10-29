@@ -302,7 +302,7 @@ public class DataController {
 
             List<Sensing> sensings = new ArrayList<>();
 
-            for(int i = 0; i<deviceByUserPk.get().size(); i++){
+            for(int i = 0; i<deviceByUserPk.get().size(); i++){ // 유저가 가진 디바이스 개수에 따른 반복
                 Device oneDevice = deviceByUserPk.get().get(i).getDevice();
 
                 List<Sensing> sensing = sensingRepository.findByDeviceAndLocalDateOrderByDateDesc(new Device(oneDevice.getId()), of).get();
@@ -334,6 +334,7 @@ public class DataController {
 
             return "user";
         }
+
         else { return "user"; }
     }
 }
