@@ -1,15 +1,9 @@
 package com.example.IntegratedProject.service;
 
-import com.example.IntegratedProject.dao.SensingRepository;
-import com.example.IntegratedProject.entity.Device;
 import com.example.IntegratedProject.entity.Sensing;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,5 +34,4 @@ public class SensingService {
 
         return sensingList;
     }
-
 }

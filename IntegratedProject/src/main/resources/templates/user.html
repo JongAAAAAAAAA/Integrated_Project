@@ -71,10 +71,10 @@
         </tr>
     </table>
 
-    <div class="pagination">
+    <div class="pagination" th:if="${totalPage>0}">
         <ul class="ulPagination">
             <li th:each="page : ${#numbers.sequence(1, totalPage)}" class="liPagination">
-                <a th:href="@{/search/web(datetimepicker1Input=${#datetimepicker1Input},userPk=${userPk},page=${page-1})}" th:text="${page}" id="link" class="btn btn-outline-success"></a>
+                <a th:href="@{/search/web(datetimepicker1Input=${LocalDate},userPk=${userPk},page=${page-1})}" th:text="${page}" id="link" class="btn btn-outline-success"></a>
             </li>
         </ul>
     </div>
