@@ -18,7 +18,14 @@ public class SensingService {
 
         List<Sensing> sensingList = new ArrayList<>();
 
-        if (page + 1 != totalPage){ // 맨 마지막 이전 페이지까지의 계산
+        if (totalPage == 0){
+            startRow = 0;
+            endRow = 0;
+            List<Sensing> sensings1 = sensings.subList(startRow, endRow);
+
+            sensingList.addAll(sensings1);
+        }
+        else if (page + 1 != totalPage){ // 맨 마지막 이전 페이지까지의 계산
             List<Sensing> sensings1 = sensings.subList(startRow, endRow);
 
             sensingList.addAll(sensings1);
@@ -31,6 +38,20 @@ public class SensingService {
 
             sensingList.addAll(sensings1);
         }
+
+//        if (page + 1 != totalPage){ // 맨 마지막 이전 페이지까지의 계산
+//            List<Sensing> sensings1 = sensings.subList(startRow, endRow);
+//
+//            sensingList.addAll(sensings1);
+//        }
+//        else { // 맨 마지막 페이지 일 때의 계산
+//            startRow = fixCount * page;
+//            endRow = startRow + remainder;
+//
+//            List<Sensing> sensings1 = sensings.subList(startRow, endRow);
+//
+//            sensingList.addAll(sensings1);
+//        }
 
         return sensingList;
     }
