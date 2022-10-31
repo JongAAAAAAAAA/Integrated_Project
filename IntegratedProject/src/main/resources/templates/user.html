@@ -71,15 +71,34 @@
         </tr>
     </table>
 
+    <!-- 페이징 -->
     <div class="pagination" th:if="${totalPage>0}">
+        <!-- 전역 변수 선언 -->
         <ul class="ulPagination">
-            <li th:each="page : ${#numbers.sequence(1, totalPage)}" class="liPagination">
+            <!-- 처음으로 이동 -->
+            <li class="liPagination">
+                <a th:href="@{/search/web(datetimepicker1Input=${LocalDate},userPk=${userPk},page=0)}" th:text="'<<'" class="btn btn-outline-success" style="text-decoration: none;"></a>
+            </li>
+            <!-- 이전으로 이동 -->
+            <li th:if="${tempStartPage >= pageSize}"class="liPagination">
+                <a th:href="@{/search/web(datetimepicker1Input=${LocalDate},userPk=${userPk},page=${left})}" th:text="'<'" class="btn btn-outline-success"></a>
+            </li>
+            <!-- 특정 페이지로 이동 -->
+            <li th:each="page : ${#numbers.sequence(tempStartPage+1, tempEndPage+1)}" class="liPagination">
                 <a th:href="@{/search/web(datetimepicker1Input=${LocalDate},userPk=${userPk},page=${page-1})}" th:text="${page}" id="link" class="btn btn-outline-success"></a>
+            </li>
+            <!-- 다음으로 이동 -->
+            <li th:if="${tempEndPage < totalPage-1}" class="liPagination">
+                <a th:href="@{/search/web(datetimepicker1Input=${LocalDate},userPk=${userPk},page=${right})}" th:text="'>'" class="btn btn-outline-success"></a>
+            </li>
+            <!-- 마지막으로 이동 -->
+            <li class="liPagination">
+                <a th:href="@{/search/web(datetimepicker1Input=${LocalDate},userPk=${userPk},page=${totalPage-1})}" th:text="'>>'" class="btn btn-outline-success"></a>
             </li>
         </ul>
     </div>
-
 </div>
+
 <footer class="mt-auto text-black text-center">
     <p>Cover 2022, Gavengers Allrights reserved </p>
 </footer>
