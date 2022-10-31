@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface TxBatteryRepository extends JpaRepository<TxBattery, Integer> {
     Optional<TxBattery> findTopByDeviceOrderByDateDesc(Device device);
+    Optional<TxBattery> findTopByDeviceOrderByDate(Device device);
 }

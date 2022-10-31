@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface RxBatteryRepository extends JpaRepository<RxBattery, Integer> {
     Optional<RxBattery> findTopByDeviceOrderByDateDesc(Device device);
+    Optional<RxBattery> findTopByDeviceOrderByDate(Device device);
 }
