@@ -9,7 +9,6 @@ import com.example.IntegratedProject.entity.Sensing;
 import com.example.IntegratedProject.entity.TxBattery;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
