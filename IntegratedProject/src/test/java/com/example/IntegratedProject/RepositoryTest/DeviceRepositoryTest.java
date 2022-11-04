@@ -30,7 +30,6 @@ public class DeviceRepositoryTest extends IntegratedProjectApplicationTests {
 
 
     @Test
-    //@Transactional
     public void insert(){
         //given
         Device device = new Device();
